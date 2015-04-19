@@ -38,8 +38,11 @@ def mapper():
     neighborhoods = []
     readNeighborhood('ZillowNeighborhoods-NY.shp', index, neighborhoods)
     for values in parseInput():
-        pickup_location = (float(values[10]), float(values[11]))
-        dropoff_location = (float(values[12]), float(values[13]))
+        try:
+            pickup_location = (float(values[10]), float(values[11]))
+            dropoff_location = (float(values[12]), float(values[13]))
+        except:
+            continue
         pickup_location = neighborhoods[findNeighborhood(pickup_location, index, neighborhoods)][0].split('_')
         dropoff_location = neighborhoods[findNeighborhood(dropoff_location, index, neighborhoods)][0].split('_')
         zones = taxi_zones.taxi_zone_color(pickup_location[1], pickup_location[0])
