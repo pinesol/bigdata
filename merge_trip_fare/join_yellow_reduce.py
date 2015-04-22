@@ -16,7 +16,7 @@ allvars = tripsvars + faresvars
 
 index = ",".join(mergevars)
 output = ",".join(allvars) 
-print "%s\t%s" %(index,output)
+print "%s,%s" %(index,output)
 
 keystate = ['init']
 init = 1
@@ -41,7 +41,7 @@ for line in sys.stdin:
 					outputtrip = ",".join(triplist[i])
 					outputfare = ",".join(farelist[j])
 					output = outputtrip+","+outputfare
-					print "%s\t%s" %(index,output)
+					print "%s,%s" %(index,output)
 
 			farelist = [faredata]
 			triplist = []
@@ -61,7 +61,7 @@ for line in sys.stdin:
 					outputtrip = ",".join(triplist[i])
 					outputfare = ",".join(farelist[j])
 					output = outputtrip+","+outputfare
-					print "%s\t%s" %(index,output)
+					print "%s,%s" %(index,output)
 
 			farelist = []
 			triplist = [tripdata]
@@ -83,7 +83,7 @@ for i in range(len(triplist)):
 		outputtrip = ",".join(triplist[i])
 		outputfare = ",".join(farelist[j])
 		output = outputtrip+","+outputfare
-		print "%s\t%s" %(index,output)
+		print "%s,%s" %(index,output)
 
 
 
