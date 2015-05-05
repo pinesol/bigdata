@@ -4,17 +4,30 @@ import sys
 import string
 import os
 '''
-vars = 
+varsold = 
 ["pickup_datetime dropoff_datetime store_and_fwd_flag rate_code \
 pickup_longitude pickup_latitude dropoff_longitude dropoff_latitude \
 passenger_count trip_distance fare_amount	surcharge mta_tax tip_amount \
 tolls_amount total_amount payment_type pickup_borough pickup_neighbor \
 dropoff_borough	dropoff_neighbor zone color"]
 
-order = ["color zone pick_n pick_b drop_n drop_b day hour pickup_longitude \
+orderold = ["color zone pick_n pick_b drop_n drop_b day hour pickup_longitude \
 pickup_latitude dropoff_longitude dropoff_latitude passenger_count \
 trip_distance fare_amount	surcharge mta_tax tip_amount tolls_amount total_amount \
 count"]
+
+vars = 
+['pickup_datetime','dropoff_datetime', 'store_and_fwd_flag' , \
+'rate_code', 'pickup_longitude', 'pickup_latitude', 'dropoff_longitude',  \
+'dropoff_latitude', 'passenger_count', 'trip_distance','fare_amount', \
+'surcharge','mta_tax','tip_amount','tolls_amount','total_amount','payment_type', \
+'pickup_borough','pickup_neighbor','dropoff_borough','dropoff_neighbor','pickup_zone' \
+,'dropoff_zone','pickup_is_border','dropoff_is_border', 'color']
+
+order = ["color pick_n pick_b drop_n drop_b pick_zone drop_zone pick_border \
+drop_border day hour pickup_longitude pickup_latitude dropoff_longitude \
+dropoff_latitude passenger_count trip_distance fare_amount surcharge \ 
+mta_tax tip_amount tolls_amount total_amount count"]
 
 data:
 4: pickup_longitude
@@ -43,16 +56,20 @@ for line in sys.stdin:
 
    	else :
 		color = line[-1]
-		zone = line[-2]
-		pick_n = line[-5]
-		pick_b = line[-6]
-		drop_n = line[-3]
-		drop_b = line[-4]
+		drop_border = line[-2]
+		pick_border = line[-3]
+		drop_zone = line[-4]
+		pick_zone = line[-5]
+		drop_n = line[-6]
+		drop_b = line[-7]
+		pick_n = line[-8]
+		pick_b = line[-9]
+
 		day = line[0].strip().split()[0]
 		hour = line[0].strip().split()[1][0:2]
 		data = ",".join(line[4:16])
 	
 
-    		print "%s,%s,%s,%s,%s,%s,%s,%s\t%s" %(color,zone,pick_n,pick_b,drop_n,drop_b,day,hour,data)	
+    		print "%s,%s,%s,%s,%s,%s,%s,%s\t%s" %(color,pick_n,pick_b,drop_n,drop_b,pick_zone,drop_zone,pick_border,drop_border,day,hour,data)	
 		
 
