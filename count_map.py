@@ -70,6 +70,6 @@ for line in sys.stdin:
 		data = ",".join(line[4:16])
 	
 
-    		print "%s,%s,%s,%s,%s,%s,%s,%s\t%s" %(color,pick_n,pick_b,drop_n,drop_b,pick_zone,drop_zone,pick_border,drop_border,day,hour,data)	
+    		print "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\t%s" %(color,pick_n,pick_b,drop_n,drop_b,pick_zone,drop_zone,pick_border,drop_border,day,hour,data)	
 		
 
