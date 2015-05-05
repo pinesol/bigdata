@@ -1,3 +1,11 @@
+-- USEFUL SNIPPETS
+-- TO GREEN: where dropoff_zone = "green"
+-- FROM GREEN: where pickup_zone = "green"
+-- WITHIN GREEN: where dropoff_zone = "green" and pickup_zone = "green"
+-- variables to compare: passenger_count trip_distance tolls_amount tip_amount/total_amount
+
+
+
 -- Delete UNKNOWN pickup or dropoff neighborhoods
 
 DELETE from trips 
