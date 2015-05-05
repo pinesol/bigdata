@@ -8,7 +8,7 @@ WHERE dropoff_neighborhood = "UNKNOWN" OR dropoff_neighborhood = "UNKNOWN"
 
 select year_val, month_val, sum(total_amount)
 from (
-  select YEAR(pickup_date) as year_val, MONTH(pickup_date) as month_val, total_amount
+  select YEARWEEK(pickup_date) as week_val, MONTH(pickup_date) as month_val, total_amount
   from trips
   where zone = 'green'
 ) as green_zone
@@ -19,7 +19,7 @@ order by year_val, month_val;
 
 select year_val, month_val, color, sum(total_amount)
 from (
-  select YEAR(pickup_date) as year_val, MONTH(pickup_date) as month_val, color, total_amount
+  select YEARWEEK(pickup_date) as week_val, MONTH(pickup_date) as month_val, color, total_amount
   from trips
   where zone = 'green'
 ) as green_zone
