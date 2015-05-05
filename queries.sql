@@ -1,3 +1,7 @@
+-- Delete UNKNOWN pickup or dropoff neighborhoods
+
+DELETE from trips 
+WHERE dropoff_neighborhood = "UNKNOWN" OR dropoff_neighborhood = "UNKNOWN"
 
 
 -- Total money made in green zones
