@@ -227,7 +227,77 @@ from (
   group by color
 ) subtable;
 
--- TODO add border regions
+
+-----------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------
+
+
+
+---------------------------------------------------------------------------------------
+
+-- Q1AB: Total money made TO green zones [border]
+
+select color,week_val, sum(total_amount)
+from (
+  select YEARWEEK(pickup_date) as week_val, total_amount, color
+  from trips
+  where dropoff_zone = "green" 
+  and pickup_border = "TRUE"
+) as green_zone
+group by color, week_val
+order by color, week_val
+INTO OUTFILE 'Q1A_total_money_made_to_green_zones_B.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
+
+-- Q1C: Total trips made TO green zones [border]
+
+select color, week_val, sum(num_trips)
+from (
+  select YEARWEEK(pickup_date) as week_val, num_trips, color
+  from trips
+  where dropoff_zone = "green"
+  and pickup_border = "TRUE"
+) as green_zone
+group by color, week_val
+order by color, week_val
+INTO OUTFILE 'Q1C_total_trips_made_to_green_zones_B.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
+
+-- Q2A: Total money made FROM green zones [border]
+
+select color, week_val, sum(total_amount)
+from (
+  select YEARWEEK(pickup_date) as week_val, total_amount, color
+  from trips
+  where pickup_zone = "green"
+  and dropoff_border = "TRUE"
+) as green_zone
+group by color, week_val
+order by color, week_val
+INTO OUTFILE 'Q2A_total_money_made_from_green_zones_B.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
+
+-- Q2C: Total trips made FROM green zones [border]
+
+select color, week_val, sum(num_trips)
+from (
+  select YEARWEEK(pickup_date) as week_val, num_trips, color
+  from trips
+  where pickup_zone = "green"
+  and dropoff_border = "TRUE"
+) as green_zone
+group by color, week_val
+order by color, week_val
+INTO OUTFILE 'Q2C_total_trips_made_from_green_zones_B.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
 
 ---------------OLD QUERIES
 
