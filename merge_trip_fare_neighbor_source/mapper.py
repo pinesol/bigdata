@@ -58,8 +58,8 @@ readNeighborhood('ZillowNeighborhoods-NY.shp', index, neighborhoods)
 for line in sys.stdin:
 
     #yellow path
-    #if False:
-    if 'yellow' in str(os.environ['mapreduce_map_input_file']):
+    if False:
+    #if 'yellow' in str(os.environ['mapreduce_map_input_file']):
         source = 'Y'
         full = line.strip().split(',')
 
@@ -88,19 +88,16 @@ for line in sys.stdin:
         if full[0] == 'pickup_datetime':
             pass
         else:
-            try:
-                pickup_location = (float(full[4]), float(full[5]))
-                dropoff_location = (float(full[6]), float(full[7]))
-                pickup_location = neighborhoods[findNeighborhood(pickup_location, index, neighborhoods)][0].split('_')
-                dropoff_location = neighborhoods[findNeighborhood(dropoff_location, index, neighborhoods)][0].split('_')
-                pickup_zones = taxi_zones.taxi_zone_color(pickup_location[1], pickup_location[0])
-                dropoff_zones = taxi_zones.taxi_zone_color(dropoff_location[1], dropoff_location[0])
-                pickup_is_border = taxi_zones.is_green_taxi_neighborhood(pickup_location[1], pickup_location[0])
-                dropoff_is_border = taxi_zones.is_green_taxi_neighborhood(dropoff_location[1], dropoff_location[0])
-                output_list = line + pickup_location+dropoff_location + [pickup_zones, dropoff_zones, pickup_is_border, dropoff_is_border, source]
-                print ','.join(map(str,  output_list))
-            except:
-                continue
+            pickup_location = (float(full[4]), float(full[5]))
+            dropoff_location = (float(full[6]), float(full[7]))
+            pickup_location = neighborhoods[findNeighborhood(pickup_location, index, neighborhoods)][0].split('_')
+            dropoff_location = neighborhoods[findNeighborhood(dropoff_location, index, neighborhoods)][0].split('_')
+            pickup_zones = taxi_zones.taxi_zone_color(pickup_location[1], pickup_location[0])
+            dropoff_zones = taxi_zones.taxi_zone_color(dropoff_location[1], dropoff_location[0])
+            pickup_is_border = taxi_zones.is_green_taxi_neighborhood(pickup_location[1], pickup_location[0])
+            dropoff_is_border = taxi_zones.is_green_taxi_neighborhood(dropoff_location[1], dropoff_location[0])
+            output_list = [line.strip()] + pickup_location+dropoff_location + [pickup_zones, dropoff_zones, pickup_is_border, dropoff_is_border, source]
+            print ','.join(map(str, output_list))
 
 
 
