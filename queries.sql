@@ -4,7 +4,7 @@
 -- WITHIN GREEN: where dropoff_zone = "green" and pickup_zone = "green"
 -- variables to compare: passenger_count trip_distance tolls_amount tip_amount/total_amount
 
-
+-- TODO change default data directory!!!!!
 
 -- Delete UNKNOWN pickup or dropoff neighborhoods
 
@@ -22,7 +22,12 @@ from (
   from trips
 ) as green_zone
 group by week_val
-order by week_val;
+order by week_val
+INTO OUTFILE 'Q0A_total_money_per_week.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
+
 
 -- Q0C: Total trips made per week
 
@@ -32,7 +37,18 @@ from (
   from trips
 ) as green_zone
 group by week_val
-order by week_val;
+order by week_val
+select week_val, sum(total_amount)
+from (
+  select YEARWEEK(pickup_date) as week_val, total_amount
+  from trips
+) as green_zone
+group by week_val
+order by week_val
+INTO OUTFILE 'Q0C_total_trips_per_week.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
 
 ---------------------------------------------------------------------------------------
 
@@ -45,7 +61,11 @@ from (
   where dropoff_zone = "green"
 ) as green_zone
 group by color, week_val
-order by color, week_val;
+order by color, week_val
+INTO OUTFILE 'Q1A_total_money_made_to_green_zones.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
 
 -- Q1C: Total trips made TO green zones
 
@@ -56,7 +76,11 @@ from (
   where dropoff_zone = "green"
 ) as green_zone
 group by color, week_val
-order by color, week_val;
+order by color, week_val
+INTO OUTFILE 'Q1C_total_trips_made_to_green_zones.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
 
 -- Q2A: Total money made FROM green zones
 
@@ -67,7 +91,11 @@ from (
   where pickup_zone = "green"
 ) as green_zone
 group by color, week_val
-order by color, week_val;
+order by color, week_val
+INTO OUTFILE 'Q2A_total_money_made_from_green_zones.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
 
 -- Q2C: Total trips made FROM green zones
 
@@ -78,7 +106,11 @@ from (
   where pickup_zone = "green"
 ) as green_zone
 group by color, week_val
-order by color, week_val;
+order by color, week_val
+INTO OUTFILE 'Q2C_total_trips_made_from_green_zones.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
 
 -- Q3A: Total money made WITHIN green zones
 
@@ -89,7 +121,11 @@ from (
   where pickup_zone = "green" and dropoff_zone = "green"
 ) as green_zone
 group by color, week_val
-order by color, week_val;
+order by color, week_val
+INTO OUTFILE 'Q3A_total_money_made_within_green_zones.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
 
 -- Q3C: Total trips made WITHIN green zones
 
@@ -100,54 +136,78 @@ from (
   where pickup_zone = "green" and dropoff_zone = "green"
 ) as green_zone
 group by color, week_val
-order by color, week_val;
+order by color, week_val
+INTO OUTFILE 'Q3C_total_trips_made_within_green_zones.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
 
 ---------------------------------------------------------------------------------
 
 -- Q4A: Total money made TO green zones (by neighborhood)
 
-select pickup_neighborhood, color,week_val, sum(total_amount)
+select pickup_neighborhood, color, sum(total_amount)
 from (
-  select YEARWEEK(pickup_date) as week_val, total_amount, color, pickup_neighborhood
+  select total_amount, color, pickup_neighborhood
   from trips
   where dropoff_zone = "green"
+  and pickup_date >= DATE('2013-08-01')
 ) as green_zone
-group by pickup_neighborhood, color, week_val
-order by pickup_neighborhood, color, week_val;
+group by pickup_neighborhood, color
+order by pickup_neighborhood, color
+INTO OUTFILE 'Q4A_total_money_made_to_green_zones_by_neigh.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
 
 -- Q4C: Total trips made TO green zones (by neighborhood)
 
-select pickup_neighborhood, color,week_val, sum(num_trips)
+select pickup_neighborhood, color, sum(num_trips)
 from (
-  select YEARWEEK(pickup_date) as week_val, num_trips, color, pickup_neighborhood
+  select num_trips, color, pickup_neighborhood
   from trips
   where dropoff_zone = "green"
+  and pickup_date >= DATE('2013-08-01')
 ) as green_zone
-group by pickup_neighborhood, color, week_val
-order by pickup_neighborhood, color, week_val;
+group by pickup_neighborhood, color
+order by pickup_neighborhood, color;
+INTO OUTFILE 'Q4C_total_trips_made_to_green_zones_by_neigh.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
 
 
 -- Q5A: Total money made FROM green zones (by neighborhood)
 
-select dropoff_neighborhood, color, week_val, sum(total_amount)
+select dropoff_neighborhood, color, sum(total_amount)
 from (
-  select YEARWEEK(pickup_date) as week_val, total_amount, color, dropoff_neighborhood
+  select total_amount, color, dropoff_neighborhood
   from trips
   where pickup_zone = "green"
+  and pickup_date >= DATE('2013-08-01')
 ) as green_zone
-group by dropoff_neighborhood,color, week_val
-order by dropoff_neighborhood,color, week_val;
+group by dropoff_neighborhood, color 
+order by dropoff_neighborhood, color
+INTO OUTFILE 'Q5A_total_money_made_from_green_zones_by_neigh.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
 
 -- Q5C: Total trips made FROM green zones (by neighborhood)
 
-select dropoff_neighborhood, color, week_val, sum(num_trips)
+select dropoff_neighborhood, color, sum(num_trips)
 from (
-  select YEARWEEK(pickup_date) as week_val, num_trips, color, dropoff_neighborhood
+  select num_trips, color, dropoff_neighborhood
   from trips
   where pickup_zone = "green"
+  and pickup_date >= DATE('2013-08-01')
 ) as green_zone
-group by dropoff_neighborhood,color, week_val
-order by dropoff_neighborhood,color, week_val;
+group by dropoff_neighborhood,color
+order by dropoff_neighborhood,color
+INTO OUTFILE 'Q5C_total_trips_made_from_green_zones_by_neigh.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
 
 ---------------------------------------------------------------------------------------
 
@@ -160,12 +220,14 @@ select color,
   sum(tolls_amount)/sum(num_trips) as avg_tolls_amount,
   tip/count(*) as avg_tip
 from (
-  select color, passenger_count, trip_distance, tolls_amount, tip_amount/total_amount as tip
+  select color, passenger_count, trip_distance, tolls_amount, tip_amount/total_amount as tip, num_trips
   from trips
   where dropoff_zone = "green"
+  and pickup_date >= DATE('2013-08-01')
   group by color
-);
+) subtable;
 
+-- TODO add border regions
 
 ---------------OLD QUERIES
 
