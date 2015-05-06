@@ -28,15 +28,15 @@ greenvars = ['pickup_datetime','dropoff_datetime', 'store_and_fwd_flag'	, \
 for line in sys.stdin:   
     
     #yellow path
-    if 'yellow' in str(os.environ['mapreduce_map_input_file']):
+    if False:
+    #if 'yellow' in str(os.environ['mapreduce_map_input_file']):
         source = 'Y'
-        partA , partB = line.strip().split('\t')
+        full = line.strip().split(',')
         
-        if partA[0] == 'm':
+        if full[0][0] == 'm':
             pass
         else:
-            full = partA.split(",") + partB.split(",")
-            line = [full[yellowvars.index(i)] for i in greenvars ]
+            line = [full[yellowvars.index(i)] for i in greenvars]
             print "%s\t%s" %(source,(",".join(line)))	
             
     #green path
