@@ -33,7 +33,7 @@ CREATE TABLE trips (
 
 CREATE INDEX color_index
 ON trips 
-(color, zone, pickup_borough, pickup_neighborhood, dropoff_neighborhood);
+(color, pickup_zone, dropoff_zone, pickup_borough, pickup_neighborhood, dropoff_neighborhood);
 
 
 LOAD DATA LOCAL INFILE 'testtable.csv' 
