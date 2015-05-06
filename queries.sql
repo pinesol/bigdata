@@ -151,29 +151,43 @@ order by dropoff_neighborhood,color, week_val;
 
 ---------------------------------------------------------------------------------------
 
+-- Q6: characteristics to green
+--TODO passenger_count, trip_distance tolls_amount, tip_amount/total_amount
+
+select color, 
+  sum(passenger_count)/sum(num_trips) as avg_passenger_count,
+  sum(trip_distance)/sum(num_trips) as avg_trip_distance,
+  sum(tolls_amount)/sum(num_trips) as avg_tolls_amount,
+  tip/count(*) as avg_tip
+from (
+  select color, passenger_count, trip_distance, tolls_amount, tip_amount/total_amount as tip
+  from trips
+  where dropoff_zone = "green"
+  group by color
+);
 
 
 ---------------OLD QUERIES
 
 -- Total money made in green zones
 
-select year_val, month_val, sum(total_amount)
-from (
-  select YEARWEEK(pickup_date) as week_val, MONTH(pickup_date) as month_val, total_amount
-  from trips
-  where zone = 'green'
-) as green_zone
-group by year_val, month_val
-order by year_val, month_val;
+-- select year_val, month_val, sum(total_amount)
+-- from (
+--   select YEARWEEK(pickup_date) as week_val, MONTH(pickup_date) as month_val, total_amount
+--   from trips
+--   where zone = 'green'
+-- ) as green_zone
+-- group by year_val, month_val
+-- order by year_val, month_val;
 
 -- Total money made in green zones, split into taxi color
 
-select year_val, month_val, color, sum(total_amount)
-from (
-  select YEARWEEK(pickup_date) as week_val, MONTH(pickup_date) as month_val, color, total_amount
-  from trips
-  where zone = 'green'
-) as green_zone
-group by year_val, month_val, color
-order by year_val, month_val, color;
+-- select year_val, month_val, color, sum(total_amount)
+-- from (
+--   select YEARWEEK(pickup_date) as week_val, MONTH(pickup_date) as month_val, color, total_amount
+--   from trips
+--   where zone = 'green'
+-- ) as green_zone
+-- group by year_val, month_val, color
+-- order by year_val, month_val, color;
 
