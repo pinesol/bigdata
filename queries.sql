@@ -14,6 +14,8 @@ OR dropoff_neighborhood = "UNKNOWN";
 
 -- Q0A: Total money made per week
 
+select 'week_val', 'sum(total_amount)'
+UNION ALL
 select week_val, sum(total_amount)
 from (
   select YEARWEEK(pickup_date) as week_val, total_amount
@@ -29,6 +31,8 @@ LINES TERMINATED BY '\n';
 
 -- Q0C: Total trips made per week
 
+select 'week_val', 'sum(num_trips)'
+UNION ALL
 select week_val, sum(num_trips)
 from (
   select YEARWEEK(pickup_date) as week_val, num_trips
@@ -43,6 +47,8 @@ LINES TERMINATED BY '\n';
 
 -- Q1A: Total money made TO green zones
 
+select 'color', 'week_val', 'sum(total_amount)'
+UNION ALL
 select color,week_val, sum(total_amount)
 from (
   select YEARWEEK(pickup_date) as week_val, total_amount, color
@@ -58,6 +64,8 @@ LINES TERMINATED BY '\n';
 
 -- Q1C: Total trips made TO green zones
 
+select 'color', 'week_val', 'sum(num_trips)'
+UNION ALL
 select color, week_val, sum(num_trips)
 from (
   select YEARWEEK(pickup_date) as week_val, num_trips, color
@@ -73,6 +81,8 @@ LINES TERMINATED BY '\n';
 
 -- Q2A: Total money made FROM green zones
 
+select 'color', 'week_val', 'sum(total_amount)'
+UNION ALL
 select color, week_val, sum(total_amount)
 from (
   select YEARWEEK(pickup_date) as week_val, total_amount, color
@@ -88,6 +98,8 @@ LINES TERMINATED BY '\n';
 
 -- Q2C: Total trips made FROM green zones
 
+select 'color', 'week_val', 'sum(num_trips)'
+UNION ALL
 select color, week_val, sum(num_trips)
 from (
   select YEARWEEK(pickup_date) as week_val, num_trips, color
@@ -103,6 +115,8 @@ LINES TERMINATED BY '\n';
 
 -- Q3A: Total money made WITHIN green zones
 
+select 'color', 'week_val', 'sum(total_amount)'
+UNION ALL
 select color, week_val, sum(total_amount)
 from (
   select YEARWEEK(pickup_date) as week_val, total_amount, color
@@ -118,6 +132,8 @@ LINES TERMINATED BY '\n';
 
 -- Q3C: Total trips made WITHIN green zones
 
+select 'color', 'week_val', 'sum(num_trips)'
+UNION ALL
 select color, week_val, sum(num_trips)
 from (
   select YEARWEEK(pickup_date) as week_val, num_trips, color
@@ -133,6 +149,8 @@ LINES TERMINATED BY '\n';
 
 -- Q4A: Total money made TO green zones (by neighborhood)
 
+select 'pickup_neighborhood', 'color', 'sum(total_amount)'
+UNION ALL
 select pickup_neighborhood, color, sum(total_amount)
 from (
   select total_amount, color, pickup_neighborhood
@@ -149,6 +167,8 @@ LINES TERMINATED BY '\n';
 
 -- Q4C: Total trips made TO green zones (by neighborhood)
 
+select 'pickup_neighborhood', 'color', 'sum(num_trips)'
+UNION ALL
 select pickup_neighborhood, color, sum(num_trips)
 from (
   select num_trips, color, pickup_neighborhood
@@ -166,6 +186,8 @@ LINES TERMINATED BY '\n';
 
 -- Q5A: Total money made FROM green zones (by neighborhood)
 
+select 'dropoff_neighborhood', 'color', 'sum(total_amount)'
+UNION ALL
 select dropoff_neighborhood, color, sum(total_amount)
 from (
   select total_amount, color, dropoff_neighborhood
@@ -182,6 +204,8 @@ LINES TERMINATED BY '\n';
 
 -- Q5C: Total trips made FROM green zones (by neighborhood)
 
+select 'dropoff_neighborhood', 'color', 'sum(num_trips)'
+UNION ALL
 select dropoff_neighborhood, color, sum(num_trips)
 from (
   select num_trips, color, dropoff_neighborhood
@@ -198,6 +222,8 @@ LINES TERMINATED BY '\n';
 
 -- Q6A: average stats for trips made TO green zones
 
+select 'color', 'avg_passenger_count', 'avg_trip_distance', 'avg_tolls_amount', 'avg_tip'
+UNION ALL
 select color, 
   sum(passenger_count)/sum(num_trips) as avg_passenger_count,
   sum(trip_distance)/sum(num_trips) as avg_trip_distance,
@@ -217,6 +243,8 @@ LINES TERMINATED BY '\n';
 
 -- Q6C: average stats for trips made FROM green zones
 
+select 'color', 'avg_passenger_count', 'avg_trip_distance', 'avg_tolls_amount', 'avg_tip'
+UNION ALL
 select color, 
   sum(passenger_count)/sum(num_trips) as avg_passenger_count,
   sum(trip_distance)/sum(num_trips) as avg_trip_distance,
@@ -236,6 +264,8 @@ LINES TERMINATED BY '\n';
 
 -- Q6AB: average stats for trips made TO green zones [border]
 
+select 'color', 'avg_passenger_count', 'avg_trip_distance', 'avg_tolls_amount', 'avg_tip'
+UNION ALL
 select color, 
   sum(passenger_count)/sum(num_trips) as avg_passenger_count,
   sum(trip_distance)/sum(num_trips) as avg_trip_distance,
@@ -256,6 +286,8 @@ LINES TERMINATED BY '\n';
 
 -- Q6CB: average stats for trips made FROM green zones [border]
 
+select 'color', 'avg_passenger_count', 'avg_trip_distance', 'avg_tolls_amount', 'avg_tip'
+UNION ALL
 select color, 
   sum(passenger_count)/sum(num_trips) as avg_passenger_count,
   sum(trip_distance)/sum(num_trips) as avg_trip_distance,
@@ -277,6 +309,8 @@ LINES TERMINATED BY '\n';
 
 -- Q1AB: Total money made TO green zones [border]
 
+select 'color', 'week_val', 'sum(total_amount)'
+UNION ALL
 select color,week_val, sum(total_amount)
 from (
   select YEARWEEK(pickup_date) as week_val, total_amount, color
@@ -293,6 +327,8 @@ LINES TERMINATED BY '\n';
 
 -- Q1C: Total trips made TO green zones [border]
 
+select 'color', 'week_val', 'sum(num_trips)'
+UNION ALL
 select color, week_val, sum(num_trips)
 from (
   select YEARWEEK(pickup_date) as week_val, num_trips, color
@@ -309,6 +345,8 @@ LINES TERMINATED BY '\n';
 
 -- Q2A: Total money made FROM green zones [border]
 
+select 'color', 'week_val', 'sum(total_amount)'
+UNION ALL
 select color, week_val, sum(total_amount)
 from (
   select YEARWEEK(pickup_date) as week_val, total_amount, color
@@ -325,6 +363,8 @@ LINES TERMINATED BY '\n';
 
 -- Q2C: Total trips made FROM green zones [border]
 
+select 'color', 'week_val', 'sum(num_trips)'
+UNION ALL
 select color, week_val, sum(num_trips)
 from (
   select YEARWEEK(pickup_date) as week_val, num_trips, color
