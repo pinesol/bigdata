@@ -75,7 +75,11 @@ from (
   from testtrips
 ) as green_zone
 group by week_val
-order by week_val;
+order by week_val
+INTO OUTFILE '/tmp/test_output/Q0C_total_trips_per_week.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
 
 -- Q1A: Total money made TO green zones
 
@@ -233,8 +237,7 @@ FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n';
 
--- Q6: characteristics to green
--- TODO passenger_count, trip_distance tolls_amount, tip_amount/total_amount
+-- Q6A: average stats for trips made TO green zones
 
 select color, 
   sum(passenger_count)/sum(num_trips) as avg_passenger_count,
@@ -243,12 +246,74 @@ select color,
   tip/count(*) as avg_tip
 from (
   select color, passenger_count, trip_distance, tolls_amount, tip_amount/total_amount as tip, num_trips
-  from testtrips
+  from trips
   where dropoff_zone = "green"
   and pickup_date >= DATE('2013-08-01')
   group by color
-) subtable;
+) subtable
+INTO OUTFILE '/tmp/test_output/Q6A_avg_stats_to_green.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
 
+-- Q6C: average stats for trips made FROM green zones
+
+select color, 
+  sum(passenger_count)/sum(num_trips) as avg_passenger_count,
+  sum(trip_distance)/sum(num_trips) as avg_trip_distance,
+  sum(tolls_amount)/sum(num_trips) as avg_tolls_amount,
+  tip/count(*) as avg_tip
+from (
+  select color, passenger_count, trip_distance, tolls_amount, tip_amount/total_amount as tip, num_trips
+  from trips
+  where pickup_zone = "green"
+  and pickup_date >= DATE('2013-08-01')
+  group by color
+) subtable
+INTO OUTFILE '/tmp/test_output/Q6C_avg_stats_from_green.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
+
+-- Q6AB: average stats for trips made TO green zones [border]
+
+select color, 
+  sum(passenger_count)/sum(num_trips) as avg_passenger_count,
+  sum(trip_distance)/sum(num_trips) as avg_trip_distance,
+  sum(tolls_amount)/sum(num_trips) as avg_tolls_amount,
+  tip/count(*) as avg_tip
+from (
+  select color, passenger_count, trip_distance, tolls_amount, tip_amount/total_amount as tip, num_trips
+  from trips
+  where dropoff_zone = "green"
+  and dropoff_border = "TRUE"
+  and pickup_date >= DATE('2013-08-01')
+  group by color
+) subtable
+INTO OUTFILE '/tmp/test_output/Q6A_avg_stats_to_green_B.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
+
+-- Q6CB: average stats for trips made FROM green zones [border]
+
+select color, 
+  sum(passenger_count)/sum(num_trips) as avg_passenger_count,
+  sum(trip_distance)/sum(num_trips) as avg_trip_distance,
+  sum(tolls_amount)/sum(num_trips) as avg_tolls_amount,
+  tip/count(*) as avg_tip
+from (
+  select color, passenger_count, trip_distance, tolls_amount, tip_amount/total_amount as tip, num_trips
+  from trips
+  where pickup_zone = "green"
+  and pickup_border = "TRUE"
+  and pickup_date >= DATE('2013-08-01')
+  group by color
+) subtable
+INTO OUTFILE '/tmp/test_output/Q6C_avg_stats_from_green_B.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
 
 -- Q1AB: Total money made TO green zones [border]
 
