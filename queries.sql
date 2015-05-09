@@ -262,103 +262,60 @@ FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n';
 
--- Q6AB: average stats for trips made TO green zones [border]
 
-select 'color', 'avg_passenger_count', 'avg_trip_distance', 'avg_tolls_amount', 'avg_tip'
-UNION ALL
-select color, 
-  sum(passenger_count)/sum(num_trips) as avg_passenger_count,
-  sum(trip_distance)/sum(num_trips) as avg_trip_distance,
-  sum(tolls_amount)/sum(num_trips) as avg_tolls_amount,
-  sum(tip_amount)/sum(fare_amount) as avg_tip
+-- Q71 Percent Change in money made by yellow cabs from [2012-08-01, 2013-01-01) to [2013-08-01, 2014-01-01), by pickup neighborhood.
+
+select first_year.pickup_neighborhood as neighborhood, 
+  (second_year.sum_total_amount - first_year.sum_total_amount) / first_year.sum_total_amount as percent_money_change
 from (
-  select color, passenger_count, trip_distance, tolls_amount, tip_amount, fare_amount, num_trips
+  select pickup_neighborhood, sum(total_amount) as sum_total_amount
   from trips
-  where dropoff_zone = "green"
-  and dropoff_border = "TRUE"
-  and pickup_date >= DATE('2013-08-01')
-) t
-group by t.color
-INTO OUTFILE '/tmp/big_data_output/Q6A_avg_stats_to_green_B.csv'
+  where pickup_date >= DATE('2012-08-01')
+  and pickup_date < DATE('2013-01-01')
+  and color = 'Y'
+  group by pickup_neighborhood
+) first_year,
+(
+  select pickup_neighborhood, sum(total_amount) as sum_total_amount
+  from trips
+  where pickup_date >= DATE('2013-08-01')
+  and pickup_date < DATE('2014-01-01')
+  and color = 'Y'
+  group by pickup_neighborhood
+) second_year
+where first_year.pickup_neighborhood = second_year.pickup_neighborhood
+order by neighborhood
+INTO OUTFILE '/tmp/big_data_output/Q71_pct_money_yellow_change_yoy.csv'
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n';
 
--- Q1C: Total trips made TO green zones [border]
 
-select 'color', 'week_val', 'sum(num_trips)'
-UNION ALL
-select color, week_val, sum(num_trips)
+-- Q72 Percent Change in number of trips made by yellow cabs from [2012-08-01, 2013-01-01) to [2013-08-01, 2014-01-01), by pickup neighborhood.
+
+select first_year.pickup_neighborhood as neighborhood, 
+  (second_year.sum_num_trips - first_year.sum_num_trips) / first_year.sum_num_trips as percent_trips_change
 from (
-  select YEARWEEK(pickup_date) as week_val, num_trips, color
+  select pickup_neighborhood, sum(num_trips) as sum_num_trips
   from trips
-  where dropoff_zone = "green"
-  and dropoff_border = "TRUE"
-) as green_zone
-group by color, week_val
-order by color, week_val
-INTO OUTFILE '/tmp/big_data_output/Q1C_total_trips_made_to_green_zones_B.csv'
+  where pickup_date >= DATE('2012-08-01')
+  and pickup_date < DATE('2013-01-01')
+  and color = 'Y'
+  group by pickup_neighborhood
+) first_year,
+(
+  select pickup_neighborhood, sum(num_trips) as sum_num_trips
+  from trips
+  where pickup_date >= DATE('2013-08-01')
+  and pickup_date < DATE('2014-01-01')
+  and color = 'Y'
+  group by pickup_neighborhood
+) second_year
+where first_year.pickup_neighborhood = second_year.pickup_neighborhood
+order by neighborhood
+INTO OUTFILE '/tmp/big_data_output/Q72_pct_trips_yellow_change_yoy.csv'
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n';
 
--- Q2A: Total money made FROM green zones [border]
-
-select 'color', 'week_val', 'sum(total_amount)'
-UNION ALL
-select color, week_val, sum(total_amount)
-from (
-  select YEARWEEK(pickup_date) as week_val, total_amount, color
-  from trips
-  where pickup_zone = "green"
-  and pickup_border = "TRUE"
-) as green_zone
-group by color, week_val
-order by color, week_val
-INTO OUTFILE '/tmp/big_data_output/Q2A_total_money_made_from_green_zones_B.csv'
-FIELDS TERMINATED BY ','
-ENCLOSED BY '"'
-LINES TERMINATED BY '\n';
-
--- Q2C: Total trips made FROM green zones [border]
-
-select 'color', 'week_val', 'sum(num_trips)'
-UNION ALL
-select color, week_val, sum(num_trips)
-from (
-  select YEARWEEK(pickup_date) as week_val, num_trips, color
-  from trips
-  where pickup_zone = "green"
-  and pickup_border = "TRUE"
-) as green_zone
-group by color, week_val
-order by color, week_val
-INTO OUTFILE '/tmp/big_data_output/Q2C_total_trips_made_from_green_zones_B.csv'
-FIELDS TERMINATED BY ','
-ENCLOSED BY '"'
-LINES TERMINATED BY '\n';
-
--- OLD QUERIES
-
--- Total money made in green zones
-
--- select year_val, month_val, sum(total_amount)
--- from (
---   select YEARWEEK(pickup_date) as week_val, MONTH(pickup_date) as month_val, total_amount
---   from trips
---   where zone = 'green'
--- ) as green_zone
--- group by year_val, month_val
--- order by year_val, month_val;
-
--- Total money made in green zones, split into taxi color
-
--- select year_val, month_val, color, sum(total_amount)
--- from (
---   select YEARWEEK(pickup_date) as week_val, MONTH(pickup_date) as month_val, color, total_amount
---   from trips
---   where zone = 'green'
--- ) as green_zone
--- group by year_val, month_val, color
--- order by year_val, month_val, color;
 
