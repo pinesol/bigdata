@@ -319,6 +319,35 @@ ENCLOSED BY '"'
 LINES TERMINATED BY '\n';
 
 
+-- Q73 Percent Change in number of trips made by green cabs from [2012-08-01, 2013-01-01) to [2013-08-01, 2014-01-01), by pickup neighborhood.
+
+select first_year_yellow.pickup_neighborhood as neighborhood, 
+  (second_year_green.sum_num_green_trips) / first_year_yellow.sum_num_yellow_trips as percent_trips_change
+from 
+(
+  select pickup_neighborhood, sum(num_trips) as sum_num_yellow_trips
+  from trips
+  where pickup_date >= DATE('2012-08-01')
+  and pickup_date < DATE('2013-01-01')
+  and color = 'Y'
+  group by pickup_neighborhood
+) first_year_yellow,
+(
+  select pickup_neighborhood, sum(num_trips) as sum_num_green_trips
+  from trips
+  where pickup_date >= DATE('2013-08-01')
+  and pickup_date < DATE('2014-01-01')
+  and color = 'G'
+  group by pickup_neighborhood
+) second_year_green
+where first_year_yellow.pickup_neighborhood = second_year_green.pickup_neighborhood
+order by neighborhood
+INTO OUTFILE '/tmp/big_data_output/Q73_pct_trips_green_over_yellow_change_yoy.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
+
+
 -- Q81 Yellow taxi pickups by neighborhood, summer 2012
 
 select 'pickup_neighborhood', 'sum(num_trips)'
@@ -350,6 +379,8 @@ INTO OUTFILE '/tmp/big_data_output/Q82_green_pickups_by_neighborhood.csv'
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n';
+
+
 
 
 
