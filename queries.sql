@@ -319,3 +319,37 @@ ENCLOSED BY '"'
 LINES TERMINATED BY '\n';
 
 
+-- Q81 Yellow taxi pickups by neighborhood, summer 2012
+
+select 'pickup_neighborhood', 'sum(num_trips)'
+UNION ALL
+select pickup_neighborhood, sum(num_trips)
+from trips
+where pickup_date >= DATE('2012-08-01')
+and pickup_date < DATE('2013-01-01')
+and color = 'Y'
+group by pickup_neighborhood
+order by pickup_neighborhood
+INTO OUTFILE '/tmp/big_data_output/Q81_yellow_pickups_by_neighborhood.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
+
+-- Q82 Green taxi pickups by neighborhood, summer 2013
+
+select 'pickup_neighborhood', 'sum(num_trips)'
+UNION ALL
+select pickup_neighborhood, sum(num_trips)
+from trips
+where pickup_date >= DATE('2013-08-01')
+and pickup_date < DATE('2014-01-01')
+and color = 'G'
+group by pickup_neighborhood
+order by pickup_neighborhood
+INTO OUTFILE '/tmp/big_data_output/Q82_green_pickups_by_neighborhood.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
+
+
+
